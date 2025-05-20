@@ -41,9 +41,10 @@
       font-size: 16px;
       color: #444;
     }
+
     #chaseMessage {
       position: absolute;
-      top: 300px; /* Move it further down */
+      top: 300px;
       width: 100%;
       font-size: 24px;
       color: #cc3366;
@@ -56,9 +57,9 @@
       width: 100px;
       height: 100px;
       user-select: none;
-      transform-origin: center center;
       pointer-events: auto;
       transition: transform 0.2s ease;
+      will-change: transform, left, top;
     }
   </style>
 </head>
@@ -95,6 +96,7 @@
     let targetX = foxX;
     let targetY = foxY;
 
+    // Initial position
     fox.style.left = `${foxX}px`;
     fox.style.top = `${foxY}px`;
 
@@ -121,6 +123,7 @@
       }
 
       walkFrame = 0;
+      fox.src = walkImages[walkFrame];
       frameSwapInterval = setInterval(() => {
         walkFrame = (walkFrame + 1) % walkImages.length;
         fox.src = walkImages[walkFrame];
@@ -133,7 +136,6 @@
         const dy = targetY - foxY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        // FIXED: Flip correctly for a left-facing default image
         fox.style.transform = dx > 0 ? 'scaleX(-1)' : 'scaleX(1)';
 
         if (distance > 10) {
@@ -149,9 +151,8 @@
             clearInterval(frameSwapInterval);
             frameSwapInterval = null;
 
-            fox.style.transform = 'scaleX(1)'; // Default sit facing left
             fox.src = 'sitting.png';
-            void fox.offsetWidth;
+            fox.style.transform = 'scaleX(1)';
             fox.style.left = `${foxX}px`;
             fox.style.top = `${foxY}px`;
 
