@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  text-align: center;
+  background: #f0f0f0;
+  color: #222;
+  overflow: hidden;
+}
+
+header {
+  background: #fff;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+}
+
+nav a {
+  margin: 0 1rem;
+  text-decoration: none;
+  color: #555;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #000;
+}
+
+main {
+  margin-top: 2rem;
+}
+
+.ca {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.hippo-container {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+}
+
+#hippo {
+  width: 150px;
+  position: absolute;
+  cursor: pointer;
+}

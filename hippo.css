@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #e6f7ff;
+}
+
+/* Fox image setup */
+#hippo {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  user-select: none;
+
+  /* Rotate around the left middle edge */
+  transform-origin: left center;
+  transform: rotate(0deg);
+}
+
+/* Info boxes */
+#instructions, #status {
+  position: absolute;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  font-weight: bold;
+  text-align: center;
+  pointer-events: none;
+}
+
+#instructions {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#status {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}

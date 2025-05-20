@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>$fredi</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #e6f7ff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    header {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      z-index: 10;
+      font-size: 16px;
+    }
+
+    header a {
+      color: #000;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .title {
+      margin-top: 60px;
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    .ca {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #444;
+    }
+    #chaseMessage {
+      position: absolute;
+      top: 300px; /* Move it further down */
+      width: 100%;
+      font-size: 24px;
+      color: #cc3366;
+      font-weight: bold;
+      display: none;
+    }
+
+    #fox {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      user-select: none;
+      transform-origin: center center;
+      pointer-events: auto;
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="https://x.com" target="_blank">x.com</a>
+    <a href="https://pump.fun" target="_blank">pump.fun</a>
+  </header>
+
+  <div class="title">$fredi</div>
+  <div class="ca">CA: XXXXX</div>
+  <div id="chaseMessage">hey come back!</div>
+
+  <img id="fox" src="sitting.png" alt="Fox">
+  <audio id="foxSound" preload="auto" src="sound.mp3"></audio>
+
+  <script>
+    const fox = document.getElementById('fox');
+    const sound = document.getElementById('foxSound');
+    const chaseMessage = document.getElementById('chaseMessage');
+    const body = document.body;
+
+    let chasing = false;
+    let hasPlayedSound = false;
+    let chaseStartTime = 0;
+
+    const walkImages = ['walk1.png', 'walk2.png'];
+    let walkFrame = 0;
+    let frameSwapInterval = null;
+
+    let foxX = window.innerWidth / 2;
+    let foxY = window.innerHeight / 2;
+    let targetX = foxX;
+    let targetY = foxY;
+
+    fox.style.left = `${foxX}px`;
+    fox.style.top = `${foxY}px`;
+
+    document.addEventListener('mousemove', (e) => {
+      if (chasing) {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      }
+    });
+
+    fox.addEventListener('click', () => {
+      if (chasing) return;
+
+      chasing = true;
+      chaseStartTime = Date.now();
+
+      body.style.backgroundColor = '#ffe6f0';
+      chaseMessage.style.display = 'block';
+
+      if (!hasPlayedSound) {
+        sound.currentTime = 0;
+        sound.play().catch(err => console.log('Audio failed:', err));
+        hasPlayedSound = true;
+      }
+
+      walkFrame = 0;
+      frameSwapInterval = setInterval(() => {
+        walkFrame = (walkFrame + 1) % walkImages.length;
+        fox.src = walkImages[walkFrame];
+      }, 150);
+    });
+
+    function animate() {
+      if (chasing) {
+        const dx = targetX - foxX;
+        const dy = targetY - foxY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // FIXED: Flip correctly for a left-facing default image
+        fox.style.transform = dx > 0 ? 'scaleX(-1)' : 'scaleX(1)';
+
+        if (distance > 10) {
+          const speed = 3;
+          foxX += (dx / distance) * speed;
+          foxY += (dy / distance) * speed;
+          fox.style.left = `${foxX}px`;
+          fox.style.top = `${foxY}px`;
+        } else {
+          const now = Date.now();
+          if (now - chaseStartTime >= 500) {
+            chasing = false;
+            clearInterval(frameSwapInterval);
+            frameSwapInterval = null;
+
+            fox.style.transform = 'scaleX(1)'; // Default sit facing left
+            fox.src = 'sitting.png';
+            void fox.offsetWidth;
+            fox.style.left = `${foxX}px`;
+            fox.style.top = `${foxY}px`;
+
+            body.style.backgroundColor = '#e6f7ff';
+            chaseMessage.style.display = 'none';
+          }
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
